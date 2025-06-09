@@ -1,13 +1,11 @@
-FROM ubuntu:24.04
+FROM python:3.13-slim
 
 WORKDIR /app
 
-RUN apt-get update && apt-get install python3 python3-pip -y
-
-RUN pip3 install -r requirements.txt
-
 COPY main.py .
 COPY requirements.txt .
+
+RUN pip install -r requirements.txt
 
 EXPOSE 8000
 
