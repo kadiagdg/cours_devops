@@ -6,7 +6,7 @@ services:
       context: .
       dockerfile: Dockerfile
     ports:
-      - "8080:8000"
+      - "8080:8001"
     environment:
       - DATABASE_URL=postgresql://user:password@db:5432/fastapi_db
     volumes:
