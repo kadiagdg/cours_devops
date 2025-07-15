@@ -2,8 +2,10 @@ pipeline {
     agent any
 
     environment {
-        HARBOR_USERNAME = credentials('harbor-username-fadel') // Jenkins credential ID
-        HARBOR_TOKEN = credentials('harbor-token-fadel')       // Jenkins credential ID
+        PROJECT = "fadel" // à modifier avec votre projet
+        REPOSITORY = "fastapi-postgres"
+        IMAGE = "$PROJECT/$REPOSITORY"
+        REGISTRY_HOST = "https://harbor.devgauss.com"
     }
 
     stages {
@@ -45,22 +47,18 @@ pipeline {
         }
 
         stage('Build and Push Docker Image') {
-            /*when {
+            when {
                 expression {
                     return env.CHANGE_ID == null // Skip for pull requests
                 }
-            }*/
+            }
             steps {
                 script {
-                    sh "whoami"
-                    /*sh "docker build -t harbor.devgauss.com/fadel/fastapi-postgres:${env.BUILD_ID} ."*/
-                    def image = docker.build("fadel/fastapi-postgres:${env.BUILD_ID}")
-                    docker.withRegistry('https://harbor.devgauss.com', 'registry-credentials-fadel') {
+                    def image = docker.build("$IMAGE:${env.BUILD_ID}")
+                    docker.withRegistry("$REGISTRY_HOST", 'registry-credentials-fadel') {
                         image.push()
                         image.push('latest')
                     }
-                    /*sh "echo $HARBOR_TOKEN | docker login -u $HARBOR_USERNAME --password-stdin"
-                    sh "docker push harbor.devgauss.com/fadel/fastapi-postgres:${env.BUILD_ID}"*/
                 }
             }
         }
