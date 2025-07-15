@@ -38,11 +38,11 @@ pipeline {
         }
 
         stage('Build and Push Docker Image') {
-            when {
+            /*when {
                 expression {
                     return env.CHANGE_ID == null // Skip for pull requests
                 }
-            }
+            }*/
             steps {
                 script {
                     sh 'docker build -t harbor.devgauss.com/fadel/fastapi-postgres:${env.BUILD_ID} .'
