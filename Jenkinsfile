@@ -31,7 +31,7 @@ pipeline {
                 '''
                 */
                 sh 'python3 -m pip install --upgrade pip'
-                sh 'pip install -r requirements.txt'
+                sh 'pip install --break-system-packages --no-cache-dir -r requirements.txt'
             }
         }
 
