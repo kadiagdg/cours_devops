@@ -2,8 +2,8 @@ pipeline {
     agent any
 
     environment {
-        HARBOR_USERNAME = credentials('harbor-username') // Jenkins credential ID
-        HARBOR_TOKEN = credentials('harbor-token')       // Jenkins credential ID
+        HARBOR_USERNAME = credentials('harbor-username-fadel') // Jenkins credential ID
+        HARBOR_TOKEN = credentials('harbor-token-fadel')       // Jenkins credential ID
     }
 
     stages {
@@ -53,11 +53,13 @@ pipeline {
         }
     }
 
+    /*
     post {
         always {
             cleanWs()
         }
     }
+    */
 }
 
 /*z5WQHoxUsDTh3saibDbaS7Ug0EZbToIk*/
