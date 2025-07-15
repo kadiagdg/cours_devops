@@ -26,11 +26,11 @@ pipeline {
         }
 
         stage('Run Tests') {
-            agent {
+            /*agent {
                 docker {
                     image 'python:3.13'
                 }
-            }
+            }*/
             steps {
                 sh 'pytest'
                 sh 'pytest --cov=. --cov-report=term'
