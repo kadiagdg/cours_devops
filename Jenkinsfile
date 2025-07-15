@@ -54,9 +54,13 @@ pipeline {
                 script {
                     sh "whoami"
                     /*sh "docker build -t harbor.devgauss.com/fadel/fastapi-postgres:${env.BUILD_ID} ."*/
-                    def image = docker.build("harbor.devgauss.com/fadel/fastapi-postgres:${env.BUILD_ID}")
-                    sh "echo $HARBOR_TOKEN | docker login -u $HARBOR_USERNAME --password-stdin"
-                    sh "docker push harbor.devgauss.com/fadel/fastapi-postgres:${env.BUILD_ID}"
+                    def image = docker.build("fadel/fastapi-postgres:${env.BUILD_ID}")
+                    docker.withRegistry('https://harbor.devgauss.com', 'registry-credentials-fadel') {
+                        image.push()
+                        image.push('latest')
+                    }
+                    /*sh "echo $HARBOR_TOKEN | docker login -u $HARBOR_USERNAME --password-stdin"
+                    sh "docker push harbor.devgauss.com/fadel/fastapi-postgres:${env.BUILD_ID}"*/
                 }
             }
         }
