@@ -53,13 +53,11 @@ pipeline {
         }
     }
 
-    /*
     post {
         always {
             cleanWs()
         }
     }
-    */
 }
 
 /*z5WQHoxUsDTh3saibDbaS7Ug0EZbToIk*/
