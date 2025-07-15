@@ -51,9 +51,11 @@ pipeline {
                 }
             }*/
             steps {
-                sh 'docker build -t harbor.devgauss.com/fadel/fastapi-postgres:${env.BUILD_ID} .'
-                sh 'echo $HARBOR_TOKEN | docker login -u $HARBOR_USERNAME --password-stdin'
-                sh 'docker push harbor.devgauss.com/fadel/fastapi-postgres:${env.BUILD_ID}'
+                script {
+                    sh "docker build -t harbor.devgauss.com/fadel/fastapi-postgres:${env.BUILD_ID} ."
+                    sh "echo $HARBOR_TOKEN | docker login -u $HARBOR_USERNAME --password-stdin"
+                    sh "docker push harbor.devgauss.com/fadel/fastapi-postgres:${env.BUILD_ID}"
+                }
             }
         }
     }
