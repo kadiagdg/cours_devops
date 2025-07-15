@@ -36,8 +36,11 @@ pipeline {
                 }
             }*/
             steps {
-                sh 'pytest'
-                sh 'pytest --cov=. --cov-report=term'
+                sh '''
+                    . venv/bin/activate
+                    pytest
+                    pytest --cov=. --cov-report=term
+                '''
             }
         }
 
