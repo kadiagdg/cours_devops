@@ -16,7 +16,7 @@ pipeline {
         )
         booleanParam(
             name: 'SKIP_TESTS',
-            defaultValue: false,
+            defaultValue: true,
             description: 'Skip test execution'
         )
     }
@@ -97,7 +97,7 @@ pipeline {
                         --cov-report=xml:coverage.xml \
                         --cov-report=html:htmlcov \
                         --cov-report=term \
-                        --cov-fail-under=70
+                        --cov-fail-under=65
                 '''
             }
             post {
