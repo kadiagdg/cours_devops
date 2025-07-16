@@ -39,6 +39,43 @@ pipeline {
             }
         }
 
+        stage('Code Quality Checks') {
+            parallel {
+                stage('Lint') {
+                    steps {
+                        sh '''
+                            . venv/bin/activate
+                            pip install flake8 black isort
+
+                            # Run linting
+                            flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
+
+                            # Check code formatting
+                            black --check .
+
+                            # Check import sorting
+                            isort --check-only .
+                        '''
+                    }
+                }
+
+                stage('Security Scan') {
+                    steps {
+                        sh '''
+                            . venv/bin/activate
+                            pip install bandit safety
+
+                            # Run security checks
+                            bandit -r . -x tests/
+
+                            # Check for known vulnerabilities
+                            safety check
+                        '''
+                    }
+                }
+            }
+        }
+
         stage('Run Tests') {
             when {
                 expression { return !params.SKIP_TESTS }
@@ -47,8 +84,29 @@ pipeline {
                 sh '''
                     . venv/bin/activate
                     pytest
-                    pytest --cov=. --cov-report=term
+                    pytest \
+                        --cov=. \
+                        --cov-report=xml:coverage.xml \
+                        --cov-report=html:htmlcov \
+                        --cov-report=term \
+                        --junitxml=test-results.xml \
+                        --html=test-report.html \
+                        --self-contained-html
                 '''
+            }
+            post {
+                always {
+                    // Publish test results
+                    junit 'test-results.xml'
+
+                    // Publish coverage report
+                    publishCoverage adapters: [
+                        coberturaAdapter(path: 'coverage.xml')
+                    ], sourceFileResolver: sourceFiles('STORE_LAST_BUILD')
+
+                    // Archive test artifacts
+                    archiveArtifacts artifacts: 'test-report.html,htmlcov/**/*', allowEmptyArchive: true
+                }
             }
         }
 
