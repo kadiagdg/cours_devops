@@ -90,22 +90,18 @@ pipeline {
                         --cov=. \
                         --cov-report=xml:coverage.xml \
                         --cov-report=html:htmlcov \
-                        --cov-report=term \
-                        --junitxml=test-results.xml
+                        --cov-report=term
                 '''
             }
             post {
                 always {
-                    // Publish test results
-                    junit 'test-results.xml'
-
                     // Publish coverage report
                     publishCoverage adapters: [
                         coberturaAdapter(path: 'coverage.xml')
                     ], sourceFileResolver: sourceFiles('STORE_LAST_BUILD')
 
                     // Archive test artifacts
-                    archiveArtifacts artifacts: 'test-report.html,htmlcov/**/*', allowEmptyArchive: true
+                    archiveArtifacts artifacts: 'coverage.xml,htmlcov/**/*', allowEmptyArchive: true
                 }
             }
         }
