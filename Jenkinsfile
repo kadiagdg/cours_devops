@@ -91,9 +91,7 @@ pipeline {
                         --cov-report=xml:coverage.xml \
                         --cov-report=html:htmlcov \
                         --cov-report=term \
-                        --junitxml=test-results.xml \
-                        --html=test-report.html \
-                        --self-contained-html
+                        --junitxml=test-results.xml
                 '''
             }
             post {
