@@ -86,7 +86,7 @@ pipeline {
                 sh '''
                     . venv/bin/activate
                     # Install additional test dependencies if needed
-                    pip install pytest-xdist pytest-junit
+                    pip install pytest-xdist
 
                     # Run tests with JUnit report for better visualization in Jenkins
                     pytest --junitxml=test-results.xml
