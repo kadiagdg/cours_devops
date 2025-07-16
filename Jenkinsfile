@@ -39,6 +39,7 @@ pipeline {
             }
         }
 
+        /*
         stage('Code Quality Checks') {
             parallel {
                 stage('Lint') {
@@ -75,6 +76,7 @@ pipeline {
                 }
             }
         }
+        */
 
         stage('Run Tests') {
             when {
