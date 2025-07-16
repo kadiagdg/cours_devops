@@ -85,23 +85,38 @@ pipeline {
             steps {
                 sh '''
                     . venv/bin/activate
-                    pytest
+                    # Install additional test dependencies if needed
+                    pip install pytest-xdist pytest-junit
+
+                    # Run tests with JUnit report for better visualization in Jenkins
+                    pytest --junitxml=test-results.xml
+
+                    # Run tests with coverage reporting
                     pytest \
                         --cov=. \
                         --cov-report=xml:coverage.xml \
                         --cov-report=html:htmlcov \
-                        --cov-report=term
+                        --cov-report=term \
+                        --cov-fail-under=70
                 '''
             }
             post {
                 always {
-                    // Publish coverage report
-                    publishCoverage adapters: [
-                        coberturaAdapter(path: 'coverage.xml')
-                    ], sourceFileResolver: sourceFiles('STORE_LAST_BUILD')
+                    // Archive test artifacts and coverage reports
+                    archiveArtifacts artifacts: 'coverage.xml,htmlcov/**/*,test-results.xml', allowEmptyArchive: true
 
-                    // Archive test artifacts
-                    archiveArtifacts artifacts: 'coverage.xml,htmlcov/**/*', allowEmptyArchive: true
+                    // Publish JUnit test results
+                    junit 'test-results.xml'
+
+                    // Publish HTML coverage report
+                    publishHTML(target: [
+                        allowMissing: false,
+                        alwaysLinkToLastBuild: true,
+                        keepAll: true,
+                        reportDir: 'htmlcov',
+                        reportFiles: 'index.html',
+                        reportName: 'Coverage Report'
+                    ])
                 }
             }
         }
