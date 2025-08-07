@@ -17,6 +17,7 @@ pipeline {
             steps{
                 sh """
                     # Run tests with coverage reporting
+                    . jenkinsfile_env/bin/activate
                     pytest \
                         --cov=. \
                         --cov-report=xml:coverage.xml \
