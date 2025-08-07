@@ -48,5 +48,20 @@ pipeline {
                 }
             }
         }
+        stage("sonarqube analysis"){
+            steps{
+                withSonarQubeEnv("essan_sonarqube"){
+                    script {
+                        def scannerHome = tool "SonarScanner" 
+                        sh """ 
+                            ${scannerHome}/bin/sonar-scanner
+                        """
+                    }
+                }
+
+            }
+        }
+        
+
     }
 }
