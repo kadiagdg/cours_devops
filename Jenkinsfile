@@ -13,5 +13,17 @@ pipeline {
 
             }
         }
+        stage("run_test"){
+            sh """
+                # Run tests with coverage reporting
+                pytest \
+                    --cov=. \
+                    --cov-report=xml:coverage.xml \
+                    --cov-report=html:htmlcov \
+                    --cov-report=term \
+                    --cov-fail-under=80 \
+                    --junitxml=test-results.xml
+            """
+        }
     }
 }
