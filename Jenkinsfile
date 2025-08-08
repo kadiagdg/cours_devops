@@ -68,13 +68,22 @@ pipeline {
             }
         }
 
+        stage("quality gate"){
+            steps{
+                timeout(time: 5, unit: 'MINUTES'){
+                    waitForQualityGate abortPipeline: true
+                }
+
+            }
+
+        }
+
         stage('build_push_docker_img'){
             steps{
                 script{
                     def image = docker.build("$IMAGE:${env.BUILD_ID}")
                     docker.withRegistry("$REGISTRY_HOST", 'essan_credential_harbor'){
                         image.push()
-                        
                         image.push("latest")
 
                     }
