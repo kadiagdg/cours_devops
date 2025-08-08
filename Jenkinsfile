@@ -1,5 +1,11 @@
 pipeline {
     agent any
+    environment{
+        PROJECT = "essan"
+        REPOSITORY = "fast_api_postgres"
+        IMAGE = "$PROJECT/$REPOSITORY"
+        REGISTRY_HOST = "https://harbor.devgauss.com"
+    }
 
     stages {
         stage ("setup_python"){
@@ -60,6 +66,19 @@ pipeline {
                 }
 
             }
+        }
+
+        stage('build_push_docker_img'){
+            steps{
+                script{
+                    def image = docker.build("$IMAGE:${env.BUILD_ID}")
+                    docker.withRegistry("$REGISTRY_HOST", 'essan_credential_harbor'){
+                        image.push()
+                        image.push(latest)
+                    }
+                }
+            }
+
         }
         
 
